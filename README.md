@@ -1,38 +1,92 @@
 # FlowDesk
 
-FlowDesk is a Windows desktop panel that combines Krovi's local-first productivity tools with FlowDesk's local screen capture, recording, and meeting transcription workflow.
+FlowDesk is a Windows desktop app that brings Krovi's productivity tools together with screen capture, screen recording, and on-device meeting transcription.
 
-## Features
+## Download and install (Windows 10/11)
 
-- Krovi-derived tools: clipboard history, timers and Pomodoro, file shelf, quick transfer, media controls, calendar and reminders, weather, notes, explain/read aloud, clocks, conversion, screen time, Circle to Ask, cleanup review, Agent, and Extras.
-- FlowDesk capture: area screenshots, screen recording, computer/microphone audio selection, local live Whisper transcription, saved items, transcript reading, and in-panel image/video preview.
-- Local library at `Documents\FlowDesk Library`; capture files survive app reinstalls.
-- Global area screenshot shortcut: `Ctrl+Alt+S`. Panel shortcut: `Ctrl+Alt+Space` (customizable).
-- Windows 10 (build 19041 or newer) and Windows 11 target.
+FlowDesk supports Windows 10 build 19041 or later and Windows 11.
 
-Krovi's existing feature implementations are inherited from the upstream repository. FlowDesk adds the Capture tool and packaging changes. Refer to `docs/product/FEATURE_AUDIT.md` for inherited feature caveats.
+You do **not** need Node.js, Rust, Python, or other developer tools to install the ready-made app.
 
-## Build the frontend
+1. Open the [Windows installer download page](https://github.com/raghav788/FlowDesk/actions/runs/42637196593#artifacts).
+2. Under **Artifacts**, click **flowdesk-windows-installers**. GitHub may ask you to sign in.
+3. When the ZIP finishes downloading, right-click it in File Explorer and choose **Extract All**.
+4. Open the extracted folder and double-click **FlowDesk_0.3.0_x64-setup.exe**. Follow the installer prompts. (The `.msi` file is an alternate installer.)
+5. Open **FlowDesk** from the Windows Start menu.
 
-Install Node.js 20 or later and run `npm ci` then `npm run build`.
+The ZIP is large (about 721 MB) because it includes the local speech runtime and Whisper model.
 
-## Build the Windows app
+## Quick start
 
-Install Rust with the MSVC toolchain, Visual Studio Build Tools with C++ desktop support, .NET 10 SDK, and Python 3.12 x64. Prepare a Python runtime with `faster-whisper==1.2.1`, `av==16.1.0`, `PyAudioWPatch==0.2.12.9`, and their dependencies. Download the CTranslate2 Whisper `base` model as a local model directory. Then run:
+### Open the panel
 
-```powershell
-./scripts/package-windows.ps1 -DotNet 'C:\Program Files\dotnet\dotnet.exe' -PythonRuntime 'C:\path\to\python' -WhisperModel 'C:\path\to\base-model'
-npm run tauri -- build
-```
+Press **Ctrl + Alt + Space**. The shortcut can be changed in Settings. Use the search box at the top or the icons along the left side to open a tool.
 
-The `Windows build` workflow can assemble the speech runtime and Windows installer on a GitHub Windows runner. Start it from the Actions tab; it uploads the NSIS and MSI installers as workflow artifacts.
+### Take a screenshot
 
-The packager removes PDB debug symbols, non-English satellite assemblies, and unused PySide6 packages. These are omitted from the source checkout and should not be committed. A packaged app still includes the capture helper, Python speech runtime, and Whisper model; these are large binary assets and account for most of the Windows installer size.
+Press **Ctrl + Alt + S** and select the part of the screen you want. You can also open **Capture** and choose **Select area**. The screenshot appears in the Capture library.
 
-## Privacy
+### Record your screen or transcribe speech
 
-Audio transcription runs on-device. Audio is not sent to a server. Screenshots, recordings, and transcripts are saved under Documents. The inherited AI tools are optional and require the user to provide an AI provider key before making a request.
+1. Open **Capture** in the panel.
+2. For a video, choose **Record screen**. For a live transcript without a video, choose **Start listening**.
+3. Select the audio source: **Computer**, **Microphone**, **Both**, or **Silent**.
+4. Stop the recording or listening when you are done. Open an item in the library to preview a screenshot/video or read a transcript.
+
+Transcription runs on your device. FlowDesk does not send the audio to a transcription server.
+
+### Find your saved files
+
+Screenshots, recordings, and transcripts are in **Documents → FlowDesk Library**. They stay there if you reinstall the app.
+
+## What is included?
+
+### Capture and transcription
+
+- Area screenshots and screen recordings
+- Computer audio and microphone selection
+- Live, on-device Whisper transcription
+- Searchable saved captures and transcripts
+- In-panel image and video previews
+
+### Krovi productivity tools
+
+Open these from the panel's left-side tool list:
+
+- Clipboard history, Notes, File Shelf, and Quick Transfer
+- Timers and Pomodoro focus sessions
+- Calendar and reminders, Weather, and Media controls
+- Explain/read aloud, World Clocks, and Convert
+- Screen Time, Circle to Ask, Clean My OS, Agent, and Extras
+
+Some features need an internet connection. Optional AI tools require you to configure an AI provider key before use.
+
+### Screenshots of Krovi features
+
+These example screenshots come from the Krovi project whose tools are included in FlowDesk. They show feature screens and may look different from your live data or settings.
+
+#### Pomodoro focus
+
+![Krovi Pomodoro focus screen](krovi-focus-tools.webp)
+
+#### Quick Transfer
+
+![Krovi Quick Transfer screen](krovi-quick-transfer.webp)
+
+#### Clean My OS review
+
+![Krovi Clean My OS screen](krovi-clean-my-os.webp)
+
+## Privacy and feature notes
+
+- Speech transcription is processed locally on your computer.
+- Captures and transcripts are stored in your Documents folder.
+- Krovi's existing tools are inherited from the upstream project; see [`docs/product/FEATURE_AUDIT.md`](docs/product/FEATURE_AUDIT.md) for known caveats.
+
+## Build from source (developers only)
+
+If you only want to use FlowDesk, follow **Download and install** above. Building from source requires Node.js 20+, Rust with the MSVC toolchain, Visual Studio Build Tools with C++ desktop support, .NET 10 SDK, and Python 3.12 x64. The GitHub Actions **Windows build** workflow assembles the local speech runtime and installer.
 
 ## Credits and licenses
 
-FlowDesk incorporates the MIT-licensed Krovi project by Naitik Sahu and contributors (`https://github.com/nAItiklearn/krovi`). The capture engine is derived from ShareX and distributed under GPL-3.0; its complete modified source is included in `integrations/CaptureFlow-Source`. Local transcription code is derived from FlowDesk's earlier local application. See `THIRD-PARTY-NOTICES.md` and the included licenses.
+FlowDesk incorporates the MIT-licensed Krovi project by Naitik Sahu and contributors ([upstream repository](https://github.com/nAItiklearn/krovi)). The capture engine is derived from ShareX and distributed under GPL-3.0; its modified source is included in `integrations/CaptureFlow-Source`. See `THIRD-PARTY-NOTICES.md` and the included licenses.
