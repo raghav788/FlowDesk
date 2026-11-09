@@ -13,7 +13,7 @@ jobs:
         shell: pwsh
         run: |
           $archive = Join-Path $env:RUNNER_TEMP 'flowdesk-source.zip'
-          Invoke-WebRequest -Uri 'https://github.com/raghav788/FlowDesk/releases/download/v0.3.1/FlowDesk-Combined-Source-2026-11-09-v3.zip' -OutFile $archive
+          Invoke-WebRequest -Uri 'https://github.com/raghav788/FlowDesk/releases/latest/download/FlowDesk-Source.zip' -OutFile $archive
           Expand-Archive -LiteralPath $archive -DestinationPath $env:GITHUB_WORKSPACE -Force
       - uses: actions/setup-node@v5
         with:
